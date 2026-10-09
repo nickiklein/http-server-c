@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
     fprintf(stderr, "Receiving of message failed with error: %s\n", strerror(errno));
     return 1;
   }
-  printf("Received a message of byte size: %d\n", bytes_received);
+  printf("Received a nice message of byte size: %d\n", bytes_received);
 
   close(socket_fd);
   return 0;

@@ -5,10 +5,12 @@ The purpose of this project is to code a HTTP Server from scratch in C.
 One of the main motivations of this personal project is to implement everything without the help of any AI coding tools.
 AI can and should be used as a learning tool to help with understanding, however it shall never write code for me.
 
-The key resources used for this project are Beej's guides, namely:
+The key learning resources used for this project are:
 
 - Beej's Guide to Network Programming (`https://beej.us/guide/bgnet/html/split/index.html`)
 - Beej's Guide to C Programming (`https://beej.us/guide/bgc/html/split/`)
+- Mozilla HTTP Overview (`https://developer.mozilla.org/en-US/docs/Web/HTTP`)
+- Makefile tutorial (`https://makefiletutorial.com/`)
 
 Additionally a motivation is to try and work with and learn VIM motions.
 
@@ -19,8 +21,8 @@ Each milestone has a **Done when** check so it's clear when to tick it off.
 
 ### Phase 0: Tooling
 
-- [ ] **Build setup**: a `Makefile` (or build script) that compiles with `-Wall -Wextra` and optionally `-fsanitize=address,undefined` for a debug build.
-  *Done when:* `make` builds the server and `make debug` builds it with sanitizers.
+- [x] **Build setup**: a `Makefile` (or build script) that compiles with `-Wall -Wextra`.
+  *Done when:* `make` builds the server.
 
 ### Phase 1: TCP foundation
 
