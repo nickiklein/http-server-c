@@ -31,7 +31,7 @@ Each milestone has a **Done when** check so it's clear when to tick it off.
   *Done when:* `nc localhost 3000` shows the welcome message. ✅
 - [x] **Serve forever**: the server keeps running and accepts client after client in a loop, instead of exiting after the first one.
   *Done when:* you can connect with `nc`, disconnect, and connect again without restarting the server.
-- [ ] **Know your client**: print the connecting client's IP address and port.
+- [x] **Know your client**: print the connecting client's IP address and port.
   *Done when:* each connection logs something like `Connection from 127.0.0.1:52344`.
 - [ ] **Reliable sending**: a `send_all()` helper that keeps calling `send` until every byte is out.
   *Done when:* a large message (e.g. 1 MB) arrives completely on the client side.

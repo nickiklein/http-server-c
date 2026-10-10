@@ -110,7 +110,22 @@ int main(int argc, char *argv[])
       return 1;
     }
 
-    printf("A connection has been accepted. The file descriptor is: %d\n", new_fd);
+    printf("-----\nA connection has been accepted. The file descriptor is: %d\n", new_fd);
+
+    if (incoming_addr.ss_family == AF_INET) // IPv4 handling
+    {
+      struct sockaddr_in *ipv4 = (struct sockaddr_in *)&incoming_addr;
+      char ipv4_presentation[INET_ADDRSTRLEN];
+      inet_ntop(ipv4->sin_family, &ipv4->sin_addr, ipv4_presentation, sizeof ipv4_presentation);
+      printf("The connecting IP address is: %s, the port is: %hu\n", ipv4_presentation, ipv4->sin_port);
+    }
+    else // IPv6 handling
+    {
+      struct sockaddr_in6 *ipv6 = (struct sockaddr_in6 *)&incoming_addr;
+      char ipv6_presentation[INET6_ADDRSTRLEN];
+      inet_ntop(ipv6->sin6_family, &ipv6->sin6_addr, ipv6_presentation, sizeof ipv6_presentation);
+      printf("The connecting IP address is: %s, the port is: %hu\n", ipv6_presentation, ipv6->sin6_port);
+    }
 
     // send a welcome message to the connected address.
     char *welcome_message = "Welcome to my amazing HTTP server! You have connected to it successfully!";
