@@ -97,41 +97,46 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  struct sockaddr_storage incoming_addr;
-  socklen_t incoming_addr_length = sizeof incoming_addr;
-
-  int new_fd = accept(socket_fd, (struct sockaddr *)&incoming_addr, &incoming_addr_length);
-  if (new_fd == -1)
+  while (1)
   {
-    fprintf(stderr, "Accept failed with error: %s\n", strerror(errno));
-    return 1;
+
+    struct sockaddr_storage incoming_addr;
+    socklen_t incoming_addr_length = sizeof incoming_addr;
+
+    int new_fd = accept(socket_fd, (struct sockaddr *)&incoming_addr, &incoming_addr_length);
+    if (new_fd == -1)
+    {
+      fprintf(stderr, "Accept failed with error: %s\n", strerror(errno));
+      return 1;
+    }
+
+    printf("A connection has been accepted. The file descriptor is: %d\n", new_fd);
+
+    // send a welcome message to the connected address.
+    char *welcome_message = "Welcome to my amazing HTTP server! You have connected to it successfully!";
+    int message_length = strlen(welcome_message);
+    int bytes_sent = send(new_fd, welcome_message, message_length, 0);
+    if (bytes_sent == -1)
+    {
+      fprintf(stderr, "Sending of welcome message failed with error: %s\n", strerror(errno));
+      return 1;
+    }
+    if (bytes_sent != message_length)
+    {
+      printf("Apparently not the full welcome message was sent!\n");
+    }
+
+    char buf[100];
+    int bytes_received = recv(new_fd, buf, sizeof buf, 0);
+    if (bytes_received == -1)
+    {
+      fprintf(stderr, "Receiving of message failed with error: %s\n", strerror(errno));
+      return 1;
+    }
+    printf("Received a message of byte size: %d\n", bytes_received);
+
+    // close(socket_fd);
   }
 
-  printf("A connection has been accepted. The file descriptor is: %d\n", new_fd);
-
-  // send a welcome message to the connected address.
-  char *welcome_message = "Welcome to my amazing HTTP server! You have connected to it successfully!";
-  int message_length = strlen(welcome_message);
-  int bytes_sent = send(new_fd, welcome_message, message_length, 0);
-  if (bytes_sent == -1)
-  {
-    fprintf(stderr, "Sending of welcome message failed with error: %s\n", strerror(errno));
-    return 1;
-  }
-  if (bytes_sent != message_length)
-  {
-    printf("Apparently not the full welcome message was sent!\n");
-  }
-
-  char buf[100];
-  int bytes_received = recv(new_fd, buf, sizeof buf, 0);
-  if (bytes_received == -1)
-  {
-    fprintf(stderr, "Receiving of message failed with error: %s\n", strerror(errno));
-    return 1;
-  }
-  printf("Received a nice message of byte size: %d\n", bytes_received);
-
-  close(socket_fd);
   return 0;
 }
