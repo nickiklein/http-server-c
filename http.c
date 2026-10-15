@@ -219,16 +219,35 @@ int main()
     free(output_buffer);
 
     char *input_buffer;
-    size_t input_buffer_size = 100;
-    input_buffer = malloc(input_buffer_size);
-    int total_bytes_received = 0;
+    ssize_t input_buffer_size = 100;
+    input_buffer = malloc(input_buffer_size + 1);
+    if (input_buffer == NULL)
+    {
+      fprintf(stderr, "malloc failed with error: %s\n", strerror(errno));
+      return 1;
+    }
+    ssize_t total_bytes_received = 0;
 
     while (1)
     {
-      int bytes_received = recv(new_fd, input_buffer, input_buffer_size, 0);
+      if (total_bytes_received == input_buffer_size)
+      {
+        char *new_input_buffer;
+        new_input_buffer = realloc(input_buffer, input_buffer_size * 2 + 1);
+        if (new_input_buffer == NULL)
+        {
+          fprintf(stderr, "realloc failed with error: %s\n", strerror(errno));
+          return 1;
+        }
+        input_buffer_size *= 2;
+        input_buffer = new_input_buffer;
+      }
+      ssize_t bytes_received = recv(new_fd, input_buffer + total_bytes_received, input_buffer_size - total_bytes_received, 0);
       if (bytes_received == -1)
       {
         fprintf(stderr, "Receiving of message failed with error: %s\n", strerror(errno));
+        free(input_buffer);
+        close(new_fd);
         return 1;
       }
       else if (bytes_received == 0)
@@ -239,9 +258,12 @@ int main()
         break;
       }
       total_bytes_received += bytes_received;
-      printf("Received a message of byte size: %d\n", bytes_received);
+      input_buffer[total_bytes_received] = '\0';
+      printf("Received a message of byte size: %zd\n", bytes_received);
+      printf("The accumulated message reads: %s", input_buffer);
     }
-    printf("Received a total amount of bytes of: %d\n", total_bytes_received);
+    printf("Received a total amount of bytes of: %zd\n", total_bytes_received);
+    printf("The fully received message reads: %s\n", input_buffer);
     free(input_buffer);
 
     // close(socket_fd);
