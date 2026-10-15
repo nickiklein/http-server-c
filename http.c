@@ -206,8 +206,8 @@ int main()
     }
 
     size_t file_size = 0;
-    char *buffer = readFile("very_big.txt", &file_size);
-    if (buffer == NULL)
+    char *output_buffer = readFile("files/very_big.txt", &file_size);
+    if (output_buffer == NULL)
     {
       return 1;
     }
@@ -215,17 +215,34 @@ int main()
     // send a welcome message to the connected address.
     // char *welcome_message = "Welcome to my amazing HTTP server! You have connected to it successfully!";
     // int message_length = strlen(welcome_message);
-    send_all(new_fd, buffer, file_size);
-    free(buffer);
+    send_all(new_fd, output_buffer, file_size);
+    free(output_buffer);
 
-    char buf[100];
-    int bytes_received = recv(new_fd, buf, sizeof buf, 0);
-    if (bytes_received == -1)
+    char *input_buffer;
+    size_t input_buffer_size = 100;
+    input_buffer = malloc(input_buffer_size);
+    int total_bytes_received = 0;
+
+    while (1)
     {
-      fprintf(stderr, "Receiving of message failed with error: %s\n", strerror(errno));
-      return 1;
+      int bytes_received = recv(new_fd, input_buffer, input_buffer_size, 0);
+      if (bytes_received == -1)
+      {
+        fprintf(stderr, "Receiving of message failed with error: %s\n", strerror(errno));
+        return 1;
+      }
+      else if (bytes_received == 0)
+      {
+        printf("The client has finished sending. Closing the socket with this client now.\n");
+        // TODO: It might be the case here that the client has stopped sending but still wants to listen. How to handle that?
+        close(new_fd);
+        break;
+      }
+      total_bytes_received += bytes_received;
+      printf("Received a message of byte size: %d\n", bytes_received);
     }
-    printf("Received a message of byte size: %d\n", bytes_received);
+    printf("Received a total amount of bytes of: %d\n", total_bytes_received);
+    free(input_buffer);
 
     // close(socket_fd);
   }
