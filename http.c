@@ -214,7 +214,7 @@ int main()
     }
 
     // send a welcome message to the connected address.
-    char *welcome_message = "HTTP/1.1 200 OK\nContent-Language: en-US\n\n<!doctype html><html><h1>Hello World!</h1></html>";
+    char *welcome_message = "HTTP/1.1 200 OK\nContent-Language: en-US\nContent-Length:49\n\n<!doctype html><html><h1>Hello World!</h1></html>";
     int message_length = strlen(welcome_message);
     send_all(new_fd, welcome_message, message_length);
     // send_all(new_fd, output_buffer, file_size);
