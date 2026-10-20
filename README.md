@@ -40,7 +40,7 @@ Each milestone has a **Done when** check so it's clear when to tick it off.
 
 ### Phase 2: Speak HTTP
 
-- [ ] **Hello, browser**: answer every request with a minimal valid HTTP response (status line, headers, blank line, body).
+- [x] **Hello, browser**: answer every request with a minimal valid HTTP response (status line, headers, blank line, body).
   *Done when:* `curl -v localhost:3000` and a browser both show your page.
 - [ ] **Parse the request line**: extract method, path and HTTP version from the first line.
   *Done when:* the server logs `GET /about HTTP/1.1` for a request to `/about`.
