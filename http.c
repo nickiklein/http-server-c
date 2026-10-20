@@ -126,7 +126,8 @@ void send_all(int fd, char *message, int message_length)
     }
     total_bytes_sent += bytes_sent;
   }
-  printf("Sending has completed successfully in %d rounds!\n", send_rounds);
+  // printf("Sending has completed successfully in %d rounds!\n", send_rounds);
+  printf("Sending has completed successfully\n");
 }
 
 int main()
@@ -213,10 +214,11 @@ int main()
     }
 
     // send a welcome message to the connected address.
-    // char *welcome_message = "Welcome to my amazing HTTP server! You have connected to it successfully!";
-    // int message_length = strlen(welcome_message);
-    send_all(new_fd, output_buffer, file_size);
-    free(output_buffer);
+    char *welcome_message = "HTTP/1.1 200 OK\nContent-Language: en-US\n\n<!doctype html><html><h1>Hello World!</h1></html>";
+    int message_length = strlen(welcome_message);
+    send_all(new_fd, welcome_message, message_length);
+    // send_all(new_fd, output_buffer, file_size);
+    // free(output_buffer);
 
     char *input_buffer;
     ssize_t input_buffer_size = 100;
@@ -252,18 +254,18 @@ int main()
       }
       else if (bytes_received == 0)
       {
-        printf("The client has finished sending. Closing the socket with this client now.\n");
+        printf("The client has finished sending sending a message. Closing the socket with this client now.\n");
         // TODO: It might be the case here that the client has stopped sending but still wants to listen. How to handle that?
         close(new_fd);
         break;
       }
       total_bytes_received += bytes_received;
       input_buffer[total_bytes_received] = '\0';
-      printf("Received a message of byte size: %zd\n", bytes_received);
-      printf("The accumulated message reads: %s", input_buffer);
+      // printf("Received a message of byte size: %zd\n", bytes_received);
+      // printf("The accumulated message reads: %s", input_buffer);
     }
     printf("Received a total amount of bytes of: %zd\n", total_bytes_received);
-    printf("The fully received message reads: %s\n", input_buffer);
+    printf("The fully received message reads: \n\n%s\n", input_buffer);
     free(input_buffer);
 
     // close(socket_fd);
